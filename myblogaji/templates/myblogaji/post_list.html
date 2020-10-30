@@ -1,31 +1,33 @@
-<html>
-    <head>
-        <title>Django Girls blog</title>
-    </head>
-    <body>
-        <div>
-            <h1><a href="/">Django Girls Blog</a></h1>
-        </div>
+{% extends 'myblogaji/base.html' %}
 
-        {% for post in posts %}
-            <div>
-                <p>published: {{ post.published_date }}</p>
-                <h2><a href="">{{ post.title }}</a></h2>
-                <p>{{ post.text|linebreaksbr }}</p>
+{% block content %}
+    <div class="mt-5 mb-5">
+        <form action="/post/search/" method="get">
+            <i class="fa fa-search text-secondary pl-3" aria-hidden="true"></i>
+            <input class="pl-5" type="text" name='search' placeholder="What's post?" style="width: 100%;  height: 50px;">
+        </form>
+    </div>
+
+    <div class="mt-5 mb-5">
+        {% for tag in tags %}
+            <a href="{% url 'post_tag' pk=tag.pk %}"><button type="button" class="btn btn-warning px-4">{{ tag.name_tag }}</button></a>
+        {% endfor%}
+        <p class="mt-5"> There are {{post_data.total_command}} commands in our Blog </p>
+        <p class="mt-5"> There are {{post_data.avg_like}} likes per post in our Blog </p>
+    </div>
+    {% for post in posts %}
+        <div class="post">
+            <div class="date">
+                {{ post.published_date }}
             </div>
-        {% endfor %}
-<!-- 
-
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My first post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+            {% for tag in post.tag.all %}
+                <span>{{ tag.name_tag }}</span>
+            {% endfor%}
+            <p class="mt-2">{{ post.text|linebreaksbr }}</p>
+            <p>{{ post.num_command }} commands</p>
+            <p>{{ post.like }} likes, {{ post.dislike }} dislikes</p>
         </div>
+    {% endfor %}
 
-        <div>
-            <p>published: 14.06.2014, 12:14</p>
-            <h2><a href="">My second post</a></h2>
-            <p>Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut f.</p>
-        </div> -->
-    </body>
-</html>
+{% endblock %}
